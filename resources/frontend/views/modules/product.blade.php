@@ -5,8 +5,8 @@
 
     $url = last(explode('/', url()->current()));
     $categories = ProductCategory::where('active', true)->orderby('order')->get();
-    $product = Product::find(4);
-    $unities = Unity::all();
+    $product = Product::where('url', $url)->first();
+    $unities = Unity::where('active', true)->get();
 ?>
 @extends('layouts.master')
 @section('content')
@@ -89,14 +89,16 @@
                     {{--                        tortor</li>--}}
                     {{--                </ul>--}}
                     <div class="product-form product-unit mb-2 pt-1">
-                        <label>WEIGHT UNIT</label>
+                        <label>Unidades</label>
                         <div class="product-form-group pt-1">
                             <div class="product-variations mb-1">
-                                <a href="#">EACH</a>
-                                <a href="#">POUND</a>
-                                <a href="#">1LB</a>
-                                <a href="#">1KG</a>
-                                <a href="#">500G</a>
+                                @foreach($product->unity_price as $unity_price)
+                                    @foreach($unities as $unity)
+                                        @if($unity_price->unity_id === $unity->id)
+                                            <a href="#">{{ $unity->unity }}</a>
+                                        @endif
+                                    @endforeach
+                                @endforeach
                             </div>
                             <a href="#" class="product-variation-clean" style="display: none;">Clean
                                 All</a>
